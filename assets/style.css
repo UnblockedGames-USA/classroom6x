@@ -276,3 +276,10 @@ p{margin:0}
   .legal-body{padding:22px 18px 28px}
 }
 @media (max-width:720px){.footer-inner{grid-template-columns:1fr 1fr}}
+
+/* ---------- sister-site link (same rules on Unblocked Games USA and Classroom 6X) ---------- */
+.side-partner{margin:8px 0 2px;padding:10px 12px;border-radius:14px;background:var(--accent);color:var(--on-accent);font-weight:700;box-shadow:var(--shadow-sm);transition:transform .15s var(--ease)}
+.side-partner .ic{color:currentColor}
+.side-partner:hover{background:var(--accent);transform:translateY(-1px)}
+.side-partner span{display:grid;line-height:1.25}
+.side-partner small{font-weight:600;font-size:12px;opacity:.8}
