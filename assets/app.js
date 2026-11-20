@@ -15,6 +15,117 @@
     clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove('show'); }, 1800);
   }
 
+  /* PWA install action in the shared Classroom 6X header. */
+  function setupClassroomInstall() {
+    var topActions = $('.top-actions');
+    if (!topActions) return;
+
+    var button = $('#getAppBtn');
+    if (!button) {
+      button = document.createElement('button');
+      button.className = 'btn-get-app';
+      button.id = 'getAppBtn';
+      button.type = 'button';
+      button.setAttribute('aria-label', 'Get the app');
+      button.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5"></path>' +
+          '<path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>' +
+        '</svg><span>Get the app</span>';
+      var theme = $('#themeBtn');
+      if (theme && theme.parentNode === topActions) topActions.insertBefore(button, theme);
+      else topActions.appendChild(button);
+    }
+
+    var installedStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+      navigator.standalone === true;
+    var installedBefore = false;
+    try { installedBefore = localStorage.getItem('classroom6x-pwa-installed') === '1'; } catch (e) {}
+    if (installedStandalone || installedBefore) {
+      button.hidden = true;
+      return;
+    }
+
+    var deferredPrompt = null;
+    var guide = null;
+
+    function closeGuide() {
+      if (!guide || guide.hidden) return;
+      guide.classList.remove('is-visible');
+      window.setTimeout(function () { if (guide) guide.hidden = true; }, 180);
+      button.focus();
+    }
+
+    function showGuide() {
+      if (!guide) {
+        guide = document.createElement('aside');
+        guide.className = 'c6x-install-help';
+        guide.hidden = true;
+        guide.setAttribute('role', 'dialog');
+        guide.setAttribute('aria-label', 'How to install Classroom 6X');
+        guide.innerHTML =
+          '<div class="c6x-install-head">' +
+            '<img class="c6x-install-icon" src="' + esc(root + 'favicon.svg') + '" width="48" height="48" alt="" />' +
+            '<div class="c6x-install-copy"><span class="c6x-install-eyebrow">CLASSROOM 6X · QUICK ACCESS</span>' +
+            '<h2 class="c6x-install-title">Install on your device</h2></div>' +
+            '<button class="c6x-install-close" type="button" aria-label="Close install instructions">&times;</button>' +
+          '</div>' +
+          '<p class="c6x-install-description">Add Classroom 6X to your home screen or desktop for quick access to your games.</p>' +
+          '<ol class="c6x-install-steps">' +
+            '<li><strong>iPhone or iPad</strong>Open this site in Safari, tap Share, then choose “Add to Home Screen”.</li>' +
+            '<li><strong>Android</strong>In Chrome, open the menu (⋮) and choose “Install app” or “Add to Home screen”.</li>' +
+            '<li><strong>Computer or Chromebook</strong>In Chrome or Edge, use the install icon in the address bar or choose the install option in the browser menu.</li>' +
+          '</ol>' +
+          '<div class="c6x-install-actions"><button class="c6x-install-dismiss" type="button">Got it</button></div>';
+        document.body.appendChild(guide);
+        guide.querySelector('.c6x-install-close').addEventListener('click', closeGuide);
+        guide.querySelector('.c6x-install-dismiss').addEventListener('click', closeGuide);
+      }
+      guide.hidden = false;
+      window.requestAnimationFrame(function () { if (guide) guide.classList.add('is-visible'); });
+      guide.querySelector('.c6x-install-close').focus();
+    }
+
+    button.addEventListener('click', function () {
+      if (!deferredPrompt) {
+        showGuide();
+        return;
+      }
+      var event = deferredPrompt;
+      deferredPrompt = null;
+      try {
+        event.prompt();
+      } catch (error) {
+        showGuide();
+        return;
+      }
+      Promise.resolve(event.userChoice).then(function (choice) {
+        if (choice && choice.outcome === 'accepted') {
+          try { localStorage.setItem('classroom6x-pwa-installed', '1'); } catch (e) {}
+          button.hidden = true;
+          closeGuide();
+        }
+      }).catch(function () {});
+    });
+
+    window.addEventListener('beforeinstallprompt', function (event) {
+      event.preventDefault();
+      deferredPrompt = event;
+    });
+
+    window.addEventListener('appinstalled', function () {
+      try { localStorage.setItem('classroom6x-pwa-installed', '1'); } catch (e) {}
+      button.hidden = true;
+      closeGuide();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closeGuide();
+    });
+  }
+
+  setupClassroomInstall();
+
   /* theme */
   var themeBtn = $('#themeBtn');
   if (themeBtn) themeBtn.addEventListener('click', function () {
