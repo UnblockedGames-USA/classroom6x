@@ -289,3 +289,106 @@ p{margin:0}
 .new-pill{display:inline-block;font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:var(--hot);color:#fff;vertical-align:middle;margin-left:8px;line-height:1.5}
 .side-new .new-pill{margin-left:auto}
 .row-head h2 .new-pill{font-size:11px}
+
+
+/* ---------- Header app button / secondary Random action ---------- */
+.btn-random{
+  background:var(--surface);
+  color:var(--primary);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow-sm);
+}
+.btn-random:hover{
+  background:var(--surface-2);
+  border-color:var(--primary);
+  transform:translateY(-1px);
+}
+.btn-get-app{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  height:42px;
+  padding:0 16px;
+  border:1px solid transparent;
+  border-radius:999px;
+  background:var(--primary);
+  color:var(--on-primary);
+  font-size:14px;
+  font-weight:600;
+  white-space:nowrap;
+  box-shadow:none;
+  transition:background .15s,transform .15s;
+}
+.btn-get-app svg{width:17px;height:17px;flex:none}
+.btn-get-app:hover{background:var(--primary-hover);transform:translateY(-1px)}
+.btn-get-app:active,.btn-random:active{transform:scale(.97)}
+.btn-get-app:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn-get-app[hidden]{display:none}
+@media(max-width:980px){
+  .btn-random span,.btn-get-app span{display:none}
+  .btn-random,.btn-get-app{
+    width:42px;height:42px;padding:0;gap:0;justify-content:center;
+  }
+}
+@media(max-width:720px){
+  .btn-random,.btn-get-app{width:42px;height:42px}
+}
+
+
+/* ---------- Classroom 6X install instructions ---------- */
+.c6x-install-help{
+  position:fixed;
+  z-index:140;
+  right:22px;
+  bottom:max(22px,env(safe-area-inset-bottom));
+  width:min(390px,calc(100vw - 32px));
+  max-height:min(82vh,620px);
+  overflow-y:auto;
+  padding:18px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:var(--surface);
+  color:var(--text);
+  box-shadow:0 24px 70px rgba(5,22,15,.24);
+  opacity:0;
+  transform:translateY(14px) scale(.985);
+  transition:opacity .2s ease,transform .2s ease;
+}
+.c6x-install-help[hidden]{display:none}
+.c6x-install-help.is-visible{opacity:1;transform:none}
+.c6x-install-head{display:flex;align-items:center;gap:12px;min-width:0}
+.c6x-install-icon{
+  width:48px;height:48px;flex:none;object-fit:contain;
+  border-radius:14px;background:var(--surface-2);padding:5px;
+}
+.c6x-install-copy{flex:1;min-width:0}
+.c6x-install-eyebrow{
+  display:block;color:var(--primary);font-size:10px;
+  font-weight:800;letter-spacing:.09em;line-height:1.3;
+}
+.c6x-install-title{
+  margin-top:4px;font-family:var(--font-display);
+  font-size:18px;line-height:1.2;font-weight:700;letter-spacing:-.02em;
+}
+.c6x-install-close{
+  width:30px;height:30px;flex:none;display:grid;place-items:center;
+  border-radius:9px;color:var(--faint);font-size:24px;line-height:1;
+}
+.c6x-install-close:hover{background:var(--surface-2);color:var(--text)}
+.c6x-install-description{margin:12px 0 15px;color:var(--muted);font-size:14px;line-height:1.5}
+.c6x-install-steps{margin:0 0 16px;padding-left:21px;color:var(--muted);font-size:13px;line-height:1.5}
+.c6x-install-steps li{padding-left:2px}
+.c6x-install-steps li+li{margin-top:9px}
+.c6x-install-steps strong{display:block;margin-bottom:1px;color:var(--text);font-size:13px}
+.c6x-install-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px}
+.c6x-install-dismiss{
+  min-height:42px;padding:0 12px;border-radius:12px;
+  color:var(--muted);font-size:13px;font-weight:600;
+}
+.c6x-install-dismiss:hover{background:var(--surface-2);color:var(--text)}
+@media(max-width:600px){
+  .c6x-install-help{left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));width:auto;padding:16px;border-radius:18px}
+  .c6x-install-title{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){.c6x-install-help{transition:none}}
